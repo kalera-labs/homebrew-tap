@@ -1,10 +1,10 @@
 class Kalmux < Formula
   desc "Ten Claude Code agents in tmux, one place to watch them all"
   homepage "https://github.com/kalera-labs/kalmux"
-  url "https://github.com/kalera-labs/kalmux/archive/refs/tags/v0.4.1.tar.gz"
-  sha256 "5248f5cc92495eea26935842aafd5876ec4ad61526d214158215394d1011fff3"
+  url "https://github.com/kalera-labs/kalmux/archive/refs/tags/v0.4.2.tar.gz"
+  sha256 "3df93f5126b5f8ab9c02d112bf89c133c8d8aecec6db62421eeab941b2cf4ad9"
   license "MIT"
-  version "0.4.1"
+  version "0.4.2"
   head "https://github.com/kalera-labs/kalmux.git", branch: "main"
 
   depends_on "jq"
@@ -14,10 +14,19 @@ class Kalmux < Formula
 
   # Kalmux is pure standard library with no runtime dependencies, so there is nothing to resolve: the
   # tree goes into libexec and a wrapper runs it with Homebrew's unversioned python3 first on PATH.
+  # The wrapper is a Python script, not a shell one: Kalmux spawns its own UI server as
+  # `python3 <the kalmux command> ui serve`, and it bakes that path into ~/.tmux.conf and the iTerm2
+  # AutoLaunch script, so the path has to be both runnable by python and stable across upgrades.
   def install
     libexec.install Dir["*"]
-    (bin/"kalmux").write_env_script opt_libexec/"bin/kalmux",
-                                    PATH: "#{Formula["python@3.13"].opt_libexec}/bin:$PATH"
+    (bin/"kalmux").write <<~PYTHON
+      #!#{Formula["python@3.13"].opt_libexec}/bin/python3
+      import sys
+      sys.path.insert(0, "#{opt_libexec}/src")
+      from kalmux._entry import main
+      sys.exit(main())
+    PYTHON
+    (bin/"kalmux").chmod 0755
   end
 
   def caveats
