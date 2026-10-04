@@ -1,10 +1,10 @@
 class Kalmux < Formula
   desc "Ten Claude Code agents in tmux, one place to watch them all"
   homepage "https://github.com/kalera-labs/kalmux"
-  url "https://github.com/kalera-labs/kalmux/archive/refs/tags/v0.5.0.tar.gz"
-  sha256 "e4e9f247d23a375ba6668fc5eedd52964fa86cf7f737ef47102e7eb0c1684cd3"
+  url "https://github.com/kalera-labs/kalmux/archive/refs/tags/v0.5.1.tar.gz"
+  sha256 "9bef717a3d101558cc89207cf69f2ecdeb24fb5fccdbded22d5aad70278022d9"
   license "MIT"
-  version "0.5.0"
+  version "0.5.1"
   head "https://github.com/kalera-labs/kalmux.git", branch: "main"
 
   depends_on "jq"
